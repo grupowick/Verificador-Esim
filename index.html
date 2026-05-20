@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>LiC 2.0</title>
 
 <link rel="icon" href="https://i.postimg.cc/pVwGyq2c/C-2.png" type="image/png">
@@ -11,80 +13,114 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
 body{
-    height:100vh;
     width:100%;
-    background:#f2f4f8;
-    font-family:Arial,sans-serif;
+    height:100vh;
+    background:#eef2f7;
+}
+
+/* Tela Login */
+#login{
+    width:100%;
+    height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:20px;
 }
 
-/* Tela de login */
-#login{
-    width:350px;
+/* Card */
+.login-box{
+    width:380px;
+    overflow:hidden;
     background:white;
+    border-radius:24px;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+}
+
+/* Imagem superior */
+.topo{
+    height:180px;
+    background-image:url("https://i.postimg.cc/Z5NDdH29/Design-sem-nome-24.png");
+    background-size:cover;
+    background-position:center;
+}
+
+.conteudo{
     padding:30px;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);
     text-align:center;
 }
 
-#login img{
-    width:90px;
-    margin-bottom:15px;
+.logo{
+    width:80px;
+    margin-top:-70px;
+    border-radius:50%;
+    border:4px solid white;
+    background:white;
 }
 
 h2{
-    margin-bottom:20px;
+    margin-top:10px;
     color:#333;
+}
+
+.sub{
+    margin-top:8px;
+    color:#777;
+    font-size:14px;
 }
 
 input{
     width:100%;
     padding:14px;
     border-radius:12px;
-    border:1px solid #ccc;
-    margin-bottom:15px;
+    border:1px solid #d5d5d5;
+    margin-top:25px;
     outline:none;
     font-size:15px;
+}
+
+input:focus{
+    border:1px solid #6a38ff;
 }
 
 button{
     width:100%;
     padding:14px;
+    margin-top:15px;
     border:none;
     border-radius:12px;
     background:#6a38ff;
     color:white;
-    font-size:16px;
+    font-size:15px;
     cursor:pointer;
-    transition:0.3s;
+    transition:.3s;
 }
 
 button:hover{
-    opacity:0.9;
+    transform:scale(1.02);
 }
 
 #erro{
-    color:red;
-    margin-top:10px;
+    color:#e90000;
+    margin-top:15px;
     display:none;
+    font-size:14px;
 }
 
 /* Site escondido inicialmente */
 #site{
     display:none;
     width:100%;
-    height:100%;
+    height:100vh;
 }
 
 iframe{
     width:100%;
-    height:100vh;
+    height:100%;
     border:none;
 }
 </style>
@@ -93,47 +129,69 @@ iframe{
 <body>
 
 <div id="login">
-    <img src="https://i.postimg.cc/pVwGyq2c/C-2.png">
 
-    <h2>Acesso LiC 2.0</h2>
+<div class="login-box">
 
-    <input 
-        type="password"
-        id="senha"
-        placeholder="Digite a senha">
+<div class="topo"></div>
 
-    <button onclick="entrar()">
-        Entrar
-    </button>
+<div class="conteudo">
 
-    <div id="erro">
-        Senha incorreta
-    </div>
+<img
+class="logo"
+src="https://i.postimg.cc/pVwGyq2c/C-2.png">
+
+<h2>LiC 2.0</h2>
+
+<div class="sub">
+Digite sua senha para acessar
+</div>
+
+<input
+type="password"
+id="senha"
+placeholder="Digite a senha">
+
+<button onclick="entrar()">
+Entrar
+</button>
+
+<div id="erro">
+Senha incorreta
+</div>
+
+</div>
+</div>
 </div>
 
 <div id="site">
-    <iframe
-    src="https://licwick.netlify.app/"
-    allowfullscreen>
-    </iframe>
+<iframe
+src="https://licwick.netlify.app/"
+allowfullscreen>
+</iframe>
 </div>
 
 <script>
 
-function entrar(){
+const senhaCorreta="123456"; // ALTERE AQUI
 
-let senhaCorreta="123456"; //ALTERE AQUI
+// Mantém logado enquanto a aba estiver aberta
+if(sessionStorage.getItem("logado")==="sim"){
+liberarSite();
+}
+
+function entrar(){
 
 let senhaDigitada=
 document.getElementById("senha").value;
 
 if(senhaDigitada===senhaCorreta){
 
-document.getElementById("login")
-.style.display="none";
+sessionStorage.setItem(
+"logado",
+"sim"
+);
 
-document.getElementById("site")
-.style.display="block";
+liberarSite();
 
 }else{
 
@@ -144,8 +202,21 @@ document.getElementById("erro")
 
 }
 
-document.getElementById("senha")
-.addEventListener("keypress",function(e){
+function liberarSite(){
+
+document.getElementById("login")
+.style.display="none";
+
+document.getElementById("site")
+.style.display="block";
+
+}
+
+document
+.getElementById("senha")
+.addEventListener(
+"keypress",
+function(e){
 
 if(e.key==="Enter"){
 entrar();
