@@ -1,41 +1,159 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>LiC 2.0</title>
-  <link rel="icon" href="https://i.postimg.cc/pVwGyq2c/C-2.png" type="image/png">
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      background-image: url('https://i.postimg.cc/Z5NDdH29/Design-sem-nome-24.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-attachment: fixed;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
+<meta charset="UTF-8">
+<title>LiC 2.0</title>
 
-    iframe {
-      width: 1080px;
-      height: 820px; 
-      border: none;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      border-radius: 12px;
-      margin-top: 6px;
-    }
-  </style>
+<link rel="icon" href="https://i.postimg.cc/pVwGyq2c/C-2.png" type="image/png">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    width:100%;
+    background:#f2f4f8;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Tela de login */
+#login{
+    width:350px;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    text-align:center;
+}
+
+#login img{
+    width:90px;
+    margin-bottom:15px;
+}
+
+h2{
+    margin-bottom:20px;
+    color:#333;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    margin-bottom:15px;
+    outline:none;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#6a38ff;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+#erro{
+    color:red;
+    margin-top:10px;
+    display:none;
+}
+
+/* Site escondido inicialmente */
+#site{
+    display:none;
+    width:100%;
+    height:100%;
+}
+
+iframe{
+    width:100%;
+    height:100vh;
+    border:none;
+}
+</style>
 </head>
+
 <body>
-  <iframe 
-    title="Pesquisa Base de Linhas"
+
+<div id="login">
+    <img src="https://i.postimg.cc/pVwGyq2c/C-2.png">
+
+    <h2>Acesso LiC 2.0</h2>
+
+    <input 
+        type="password"
+        id="senha"
+        placeholder="Digite a senha">
+
+    <button onclick="entrar()">
+        Entrar
+    </button>
+
+    <div id="erro">
+        Senha incorreta
+    </div>
+</div>
+
+<div id="site">
+    <iframe
     src="https://licwick.netlify.app/"
-    allowfullscreen="true">
-  </iframe>
+    allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+
+function entrar(){
+
+let senhaCorreta="123456"; //ALTERE AQUI
+
+let senhaDigitada=
+document.getElementById("senha").value;
+
+if(senhaDigitada===senhaCorreta){
+
+document.getElementById("login")
+.style.display="none";
+
+document.getElementById("site")
+.style.display="block";
+
+}else{
+
+document.getElementById("erro")
+.style.display="block";
+
+}
+
+}
+
+document.getElementById("senha")
+.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+entrar();
+}
+
+});
+
+</script>
+
 </body>
 </html>
