@@ -21,7 +21,7 @@ body{
     height:100vh;
 }
 
-/* Tela de login */
+/* Tela login */
 #login{
     width:100%;
     height:100vh;
@@ -34,26 +34,27 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+
     position:relative;
 }
 
-/* Escurece o fundo */
 #login::before{
     content:"";
     position:absolute;
     inset:0;
     background:rgba(0,0,0,.45);
-    backdrop-filter:blur(3px);
+    backdrop-filter:blur(4px);
 }
 
 .login-box{
     width:380px;
-    background:rgba(255,255,255,.95);
-    position:relative;
-    z-index:2;
-
-    border-radius:24px;
     padding:35px;
+    border-radius:25px;
+
+    background:rgba(255,255,255,.95);
+
+    z-index:2;
+    position:relative;
 
     text-align:center;
 
@@ -72,9 +73,9 @@ h2{
 }
 
 .sub{
-    color:#666;
     margin-top:10px;
     margin-bottom:25px;
+    color:#666;
     font-size:14px;
 }
 
@@ -86,11 +87,10 @@ input{
     border:1px solid #ddd;
 
     outline:none;
-    font-size:15px;
 }
 
 input:focus{
-    border:1px solid #6a38ff;
+    border-color:#6a38ff;
 }
 
 button{
@@ -106,11 +106,6 @@ button{
     color:white;
 
     cursor:pointer;
-    font-size:15px;
-}
-
-button:hover{
-    opacity:.9;
 }
 
 #erro{
@@ -143,7 +138,7 @@ iframe{
 class="logo"
 src="https://i.postimg.cc/pVwGyq2c/C-2.png">
 
-<h2>LiC 3.0</h2>
+<h2>LiC 2.0</h2>
 
 <div class="sub">
 Digite sua senha para acessar
@@ -152,7 +147,7 @@ Digite sua senha para acessar
 <input
 type="password"
 id="senha"
-placeholder="Digite a senha">
+placeholder="Digite sua senha">
 
 <button onclick="entrar()">
 Entrar
@@ -163,8 +158,8 @@ Senha incorreta
 </div>
 
 </div>
-</div>
 
+</div>
 
 <div id="site">
 
@@ -175,21 +170,21 @@ allowfullscreen>
 
 </div>
 
-
 <script>
 
 const senhaCorreta="Wick@20"; // ALTERE AQUI
 
+// Mantém apenas enquanto a aba estiver aberta
 if(sessionStorage.getItem("logado")==="sim"){
     liberarSite();
 }
 
 function entrar(){
 
-let senhaDigitada=
+let senha=
 document.getElementById("senha").value;
 
-if(senhaDigitada===senhaCorreta){
+if(senha===senhaCorreta){
 
 sessionStorage.setItem(
 "logado",
