@@ -161,7 +161,7 @@
             }
         });
 
-        /* EFEITO DE DIGITAÇÃO NO TÍTULO DA ABA */
+         /* EFEITO DE DIGITAÇÃO NO TÍTULO DA ABA */
         const textoCompleto = "LiC 3.0";
         let indice = 0;
         let apagando = false;
@@ -184,10 +184,10 @@
                 document.title = textoCompleto.substring(0, indice - 1);
                 indice--;
                 
-                // Quando apaga o texto por completo
-                if (indice === 0) {
+                // CORREÇÃO: Para quando sobrar apenas a primeira letra (L)
+                if (indice === 1) { 
                     apagando = false;
-                    setTimeout(animarTitulo, 500); // Pausa com a aba limpa
+                    setTimeout(animarTitulo, 500); // Pausa antes de digitar de novo
                     return;
                 }
                 setTimeout(animarTitulo, 150); // Intervalo entre letras apagadas
