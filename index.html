@@ -3,195 +3,592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-sim Wick</title>
-    <link rel="icon" id="favicon" href="https://i.postimg.cc/1zmWTfpF/original-viko-(45).png">
-    
-    <link rel="preload" as="image" href="https://i.postimg.cc/MZNjTtDG/fundo-telmo-(19).png">
-    
+    <title>Validador de eSIM - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: Arial, sans-serif; 
+        :root {
+            --bg-page: #f8f9fa;
+            --gradient-start: #4205eb;
+            --gradient-end: #db6918;
+            --purple-light: #f0ebff;
+            --green-bg: #e6fdf3;
+            --green-text: #007a39;
+            --red-bg: #fff5f5;
+            --red-text: #c53030;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
         }
 
-        body { 
-            width: 100%; 
-            height: 100vh; 
-            overflow: hidden; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* TELA LOGIN */
-        #login { 
-            width: 100%; 
-            height: 100vh; 
-            /* OTIMIZAÇÃO: Cor escura temporária para evitar tela branca enquanto a imagem não carrega */
-            background-color: #121214; 
-            background-image: url("https://i.postimg.cc/MZNjTtDG/fundo-telmo-(19).png"); 
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            position: relative; 
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            padding: 20px;
         }
 
-        #login::before { 
-            content: ""; 
-            position: absolute; 
-            inset: 0; 
-            background: rgba(0, 0, 0, .50); 
-            backdrop-filter: blur(5px); 
+        .top-alert {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .top-alert .warning { color: #dd6b20; }
+
+        .search-navbar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
         }
 
-        .login-box { 
-            width: 380px; 
-            padding: 35px; 
-            border-radius: 28px; 
-            background: rgba(255, 255, 255, .95); 
-            z-index: 2; 
-            position: relative; 
-            text-align: center; 
-            box-shadow: 0 15px 60px rgba(0, 0, 0, .4); 
+        .logo-pill {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 12px;
+            white-space: nowrap;
         }
 
-        .logo { 
-            width: 90px; 
-            border-radius: 50%; 
-            margin-bottom: 15px; 
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 200px;
         }
 
-        h2 { 
-            color: #333; 
-            margin-bottom: 10px; 
+        .input-group label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--gradient-start);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 12px;
         }
 
-        .sub { 
-            color: #666; 
-            font-size: 14px; 
-            margin-bottom: 25px; 
+        .search-input, .select-brand {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            background-color: #f1f3f5;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            outline: none;
+            transition: all 0.2s;
         }
 
-        input { 
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 14px; 
-            border: 1px solid #ddd; 
-            outline: none; 
-            font-size: 15px; 
+        .search-input:focus, .select-brand:focus {
+            background-color: #fff;
+            border-color: var(--gradient-start);
+            box-shadow: 0 0 0 1px var(--gradient-start);
         }
 
-        input:focus { 
-            border-color: #6a38ff; 
+        .btn-action {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(66, 5, 235, 0.2);
+        }
+        .btn-action:hover { opacity: 0.9; }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 16px;
+            border: none;
+            padding: 25px;
+            box-shadow: 0 10px 25px -5px rgba(66, 5, 235, 0.3);
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
         }
 
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            margin-top: 15px; 
-            border: none; 
-            border-radius: 14px; 
-            background: #6a38ff; 
-            color: white; 
-            font-size: 15px; 
-            cursor: pointer; 
-            transition: .3s; 
+        .dashboard-body-layout {
+            display: flex;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
-        button:hover { 
-            transform: scale(1.03); 
+        .device-image-container {
+            flex: 0 0 160px;
+            max-width: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 160px;
+            align-self: flex-start;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        #erro { 
-            display: none; 
-            color: red; 
-            margin-top: 15px; 
+        .device-preview-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .dashboard-main-content {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .card-header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .device-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .device-subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-mini-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .info-mini-card .label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .info-mini-card .value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge.success { background-color: #22c55e; color: #ffffff; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4); }
+        .badge.danger { background-color: #ef4444; color: #ffffff; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4); }
+
+        .table-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 12px;
+            color: var(--text-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            border-bottom: 2px solid var(--border-color);
+            background-color: #f1f5f9;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover { background-color: #f8fafc; }
+
+        .instruction-panel {
+            margin-top: 25px;
+            background: #1e1b4b;
+            color: #e0e7ff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .instruction-panel h4 { color: #38bdf8; font-size: 0.9rem; margin-bottom: 8px; }
+        .instruction-panel ol { font-size: 0.8rem; padding-left: 15px; line-height: 1.6; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div id="login">
-        <div class="login-box">
-            <img class="logo" src="https://i.postimg.cc/1zmWTfpF/original-viko-(45).png" alt="Logo">
-            <h2>E-sim Wick</h2>
-            <div class="sub">Digite sua senha para acessar</div>
-            <input type="password" id="senha" placeholder="Digite a senha">
-            <button onclick="entrar()">Entrar</button>
-            <div id="erro">Senha incorreta</div>
+    <div class="top-alert">
+        <div><span class="warning">⚠ Atenção:</span> As informações de homologação de hardware regional e restrições de operadoras dependem de validação do lote físico.</div>
+        <div>✦✦✦</div>
+    </div>
+
+    <div class="search-navbar">
+        <div class="logo-pill">Verificador eSIM</div>
+        
+        <div class="input-group">
+            <label>Fabricante</label>
+            <select id="brandSelect" class="select-brand" onchange="updateDatalistOptions(); resetDashboard();">
+                <option value="">Selecione o fabricante...</option>
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung Galaxy / Gear</option>
+                <option value="Google">Google Pixel</option>
+                <option value="Huawei">Huawei</option>
+                <option value="Motorola">Motorola</option>
+                <option value="Xiaomi">Xiaomi / Redmi / Poco</option>
+                <option value="Oppo">Oppo / Reno / Find</option>
+                <option value="Sony">Sony Xperia</option>
+                <option value="Vivo">Vivo</option>
+                <option value="OnePlus">OnePlus</option>
+                <option value="Honor">Honor</option>
+                <option value="Sharp">Sharp AQUOS</option>
+                <option value="Rakuten">Rakuten</option>
+                <option value="Tablets">Tablets</option>
+                <option value="Computadores">Computadores / Notebooks</option>
+                <option value="Outros">Outras Marcas</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Modelo do Aparelho</label>
+            <!-- Vinculado a uma datalist dinâmica para sugerir nomes completos -->
+            <input type="text" id="modelInput" class="search-input" list="modelsSuggestions" placeholder="Comece a digitar o modelo exato..." onkeydown="if(event.key === 'Enter') checkCompatibility()">
+            <datalist id="modelsSuggestions"></datalist>
+        </div>
+
+        <button class="btn-action" onclick="checkCompatibility()">Consultar</button>
+    </div>
+
+    <div id="dashboard" class="dashboard-card">
+        <div class="dashboard-body-layout">
+            
+            <div class="device-image-container">
+                <img id="outDeviceImage" class="device-preview-img" src="" alt="Logo Marca" onerror="setImageFallback(this)">
+            </div>
+
+            <div class="dashboard-main-content">
+                <div class="card-header-panel">
+                    <div>
+                        <div id="outDeviceName" class="device-title">DISPOSITIVO</div>
+                        <div id="outDeviceStatusText" class="device-subtitle">Dispositivo homologado para rede virtual</div>
+                    </div>
+                    <div>
+                        <span id="outStatusBadge" class="badge success">Compatível</span>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-mini-card">
+                        <div class="label">TECNOLOGIA</div>
+                        <div class="value" style="color: #67e8f9">eSIM</div>
+                    </div>
+                    <div class="info-mini-card">
+                        <div class="label">CHIP FÍSICO</div>
+                        <div id="card物理SIM" class="value">Sim</div>
+                    </div>
+                    <div class="info-mini-card">
+                        <div class="label">MÚLTIPLOS eSIM</div>
+                        <div id="cardMulti" class="value">1 Ativo</div>
+                    </div>
+                    <div class="info-mini-card">
+                        <div class="label">REDE SUPORTADA</div>
+                        <div class="value">5G / 4G</div>
+                    </div>
+                </div>
+
+                <div class="table-section-title">✦ Diretrizes e Restrições Regimentais do Modelo</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Região / Mercado</th>
+                            <th>Situação Comercial</th>
+                            <th>Diretriz de Atendimento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rulesTableBody">
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 
+    <div class="instruction-panel">
+        <h4>Oriente o cliente (Procedimento de Contingência Manual)</h4>
+        <ol>
+            <li>Solicite que o cliente abra a interface de discagem padrão do smartphone.</li>
+            <li>Peça para digitar rigorosamente o código universal: <b>*#06#</b></li>
+            <li>Se o visor retornar o parâmetro identificador <b style="color:#38bdf8">EID</b> acompanhado de código numérico, o hardware é plenamente compatível.</li>
+        </ol>
+    </div>
+
     <script>
-        /* CONFIGURAÇÃO DE ACESSO */
-        const senhaCorreta = "Wick@20";
-        const urlDestino = "https://onedrive.live.com/?cid=bcafdbd3ebe35e17&id=BCAFDBD3EBE35E17%21sbbd06608e2c34fbd8539d1b5a48f2fa4&resid=BCAFDBD3EBE35E17%21sbbd06608e2c34fbd8539d1b5a48f2fa4&ithint=folder&e=swlXQi&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy9iY2FmZGJkM2ViZTM1ZTE3L0lnQUladEM3dy1LOVQ0VTUwYldrankta0FSWG5QRFBabGVjQk1Hb2h2U3ZxZkJjP2U9c3dsWFFp&v=validatepermission";
+        const esimDatabase = {
+            "Apple": ["iphone xs", "iphone xs max", "iphone xr", "iphone se (2020)", "iphone se (2022)", "iphone se 2", "iphone se 3", "iphone 11", "iphone 11 pro", "iphone 11 pro max", "iphone 12 mini", "iphone 12", "iphone 12 pro", "iphone 12 pro max", "iphone 13 mini", "iphone 13", "iphone 13 pro", "iphone 13 pro max", "iphone 14", "iphone 14 plus", "iphone 14 pro", "iphone 14 pro max", "iphone 15", "iphone 15 plus", "iphone 15 pro", "iphone 15 pro max", "iphone 16", "iphone 16 pro", "iphone 16 pro max", "iphone 17", "iphone 17 pro", "iphone 17 pro max", "iphone 17e", "iphone air", "apple watch series 3", "apple watch series 4", "apple watch series 5", "apple watch series 6", "apple watch series 7", "apple watch series 8", "apple watch series 9", "apple watch series 10", "apple watch se", "apple watch ultra lte", "apple watch ultra 2"],
+            "Samsung": ["galaxy s20", "galaxy s20+", "galaxy s20+ 5g", "galaxy s20 ultra", "galaxy s20 5g", "galaxy s21", "galaxy s21+ 5g", "galaxy s21 ultra 5g", "galaxy s22", "galaxy s22+", "galaxy s22 ultra", "galaxy s23", "galaxy s23+", "galaxy s23 ultra", "galaxy s23 fe", "galaxy s24", "galaxy s24 plus", "galaxy s24 ultra", "galaxy s25", "galaxy s25+", "galaxy note 20", "galaxy note 20 ultra 5g", "galaxy z fold", "galaxy z fold2 5g", "galaxy z fold3 5g", "galaxy z fold4", "galaxy z fold5 5g", "galaxy z fold6", "galaxy z flip", "galaxy z flip3 5g", "galaxy z flip4", "galaxy z flip5 5g", "galaxy z flip6", "samsung watch", "galaxy active 2 4g", "galaxy active 3 4g", "gear 2 3g classic", "gear s3 frontier lte", "galaxy watch 3 lte", "galaxy watch 4 lte", "galaxy watch 5 lte", "galaxy watch 5 pro", "galaxy watch 6 classic", "galaxy watch 6", "galaxy watch 7", "galaxy a54", "galaxy a55 5g", "galaxy a35", "galaxy xcover7"],
+            "Google": ["pixel 3", "pixel 3 xl", "pixel 3a", "pixel 3a xl", "pixel 4", "pixel 4a", "pixel 4 xl", "pixel 5", "pixel 6", "pixel 6 pro", "pixel 6a", "pixel 7", "pixel 7a", "pixel 7 pro", "pixel fold", "pixel 8", "pixel 8 pro", "pixel 8a", "pixel 9", "pixel 9 pro", "pixel 9 pro xl", "pixel 10", "pixel 10 pro", "pixel 10 pro xl", "pixel 10a"],
+            "Huawei": ["huawei p40", "huawei p40 pro", "huawei mate 40 pro", "huawei pura 70 pro", "huawei pura x"],
+            "Motorola": ["motorola razr 2019", "motorola razr 2022", "motorola razr 5g", "motorola razr 40", "motorola razr 40 ultra", "motorola razr+", "motorola edge 2022", "motorola edge 2023", "motorola edge+ (2023)", "motorola edge 40", "motorola edge 40 pro", "motorola edge 40 neo", "motorola edge 50 pro", "motorola edge 50 ultra", "motorola edge 50 fusion", "motorola moto g power 5g (2024)", "motorola g52j 5g", "motorola g52j 5g ⅱ", "motorola g53j 5g", "moto g54 5g", "motorola g84", "motorola g34", "motorola moto g53", "motorola moto g54", "motorola razr+ 2024", "motorola razr 2024", "motorola moto g stylus 5g 2024", "motorola moto g35", "motorola edge 60", "motorola edge 60 pro", "motorola edge 60 fusion", "motorola edge 60 stylus", "motorola razr 60", "motorola razr 60 ultra"],
+            "Xiaomi": ["xiaomi 12t pro", "xiaomi 13", "xiaomi 13 lite", "xiaomi 13 pro", "xiaomi 13t", "xiaomi 13t pro", "xiaomi 14", "xiaomi 14 pro", "xiaomi 14t", "xiaomi 14t pro", "xiaomi redmi note 13 pro+", "xiaomi redmi note 14 pro", "xiaomi redmi note 14 pro+", "xiaomi poco x7", "xiaomi 15", "xiaomi 15 ultra", "xiaomi 15t", "xiaomi 15t pro", "xiaomi redmi note 15 pro", "xiaomi redmi note 15 pro+"],
+            "Oppo": ["oppo find x3", "oppo find x3 pro", "find n2 flip", "oppo reno 5a", "oppo reno 6 pro 5g", "oppo reno 9a", "oppo find x5", "oppo find x5 pro", "oppo a55s 5g", "oppo find n3", "oppo find n3 flip", "oppo find x8", "oppo find x8 pro", "oppo reno14", "oppo reno14 pro", "oppo find x9", "oppo find x9 pro", "oppo reno 15", "oppo reno 15 pro"],
+            "Sony": ["sony xperia 10 iii lite", "sony xperia 10 iv", "xperia 10v", "xperia 1 iv", "sony xperia 5 iv", "sony xperia 1 v", "sony xperia ace iii", "sony xperia 5 v", "sony xperia 1 vi"],
+            "Vivo": ["vivo x80 pro", "vivo x90 pro", "vivo x100 pro", "vivo v29", "vivo v29 lite", "vivo v29 lite 5g", "vivo v40", "vivo v40 lite", "vivo v40 se", "vivo x200", "vivo x200s", "vivo x200 pro", "vivo x200 fe", "vivo x300", "vivo x300 pro"],
+            "OnePlus": ["oneplus 11", "oneplus 11 5g", "oneplus 12", "oneplus open", "oneplus 13", "oneplus 13r", "oneplus 13t", "oneplus 15"],
+            "Honor": ["honor magic 4 pro", "honor magic 5 pro", "honor magic 6 pro", "honor 90", "honor x8", "honor 200", "honor 200 pro", "honor magic v2", "honor magic 7 lite", "honor magic pro", "honor magic 8 pro"],
+            "Sharp": ["sharp aquos sense4 lite", "sharp aquos sense6s", "aquos sense 7", "aquos sense 7plus", "sharp aquos wish", "aquos wish 2 shg08", "aquos wish3", "aquos zero 6", "simple sumaho6", "sharp aquos r7", "sharp aquos r8", "sharp aquos r8 pro", "sharp aquos sense8"],
+            "Rakuten": ["rakuten mini", "rakuten big-s", "rakuten big", "rakuten hand", "rakuten hand 5g"],
+            "Tablets": ["ipad air (3ª a 5ª geração)", "ipad air (11 polegadas, m2)", "ipad air (13 polegadas, m2)", "ipad pro (11 polegadas, m4)", "ipad pro (11 polegadas, 1ª a 4ª geração)", "ipad pro (12,9 polegadas, 3ª a 6ª geração)", "ipad pro (13 polegadas, m4)", "ipad mini (a17 pro)", "ipad mini (5ª e 6ª geração)", "ipad (7ª a 10ª geração)", "galaxy tab s9 5g", "galaxy tab s9+ 5g", "galaxy tab s9 ultra 5g", "galaxy tab s8 5g", "galaxy tab s8+ 5g", "galaxy tab s8 ultra 5g", "galaxy tab s7+ 5g", "galaxy tab s7 fe 5g", "microsoft surface pro x", "microsoft surface pro 9 com 5g", "microsoft surface pro 8", "microsoft surface go 3", "xiaomi pad 5 pro 5g", "huawei matepad pro 5g", "huawei matepad pro 12.6", "huawei matepad 11", "huawei matepad 10.4", "lenovo tab p11 5g", "lenovo tab p12 pro", "lenovo tab m10 5g"],
+            "Computadores": ["microsoft surface pro x", "microsoft surface pro 7+", "microsoft surface pro 8", "microsoft surface go 2", "microsoft surface go 3", "lenovo thinkpad x1 carbon gen 7", "lenovo thinkpad x1 carbon gen 8", "lenovo thinkpad x1 carbon gen 9", "lenovo thinkpad x1 carbon gen 10", "lenovo thinkpad x1 yoga 5ª geração", "lenovo thinkpad x1 yoga 6ª geração", "lenovo thinkpad x1 nano", "hp elite dragonfly g2", "hp elite dragonfly g3", "dell latitude 9420", "dell latitude 9430", "asus expertbook b7 flip", "acer swift 3", "acer travelmate p6"],
+            "Outros": ["gemini pda", "fairphone 4", "fairphone 5", "doogee v30", "hammer blade 3", "hammer explorer pro", "hammer blade 5g", "nokia xr21", "nokia x30", "nokia g60 5g", "myphone now esim", "oukitel wp30 pro", "oukitel wp33 pro", "nuu x5", "zte nubia flip", "tlc 50 5g", "asus rog phone 9", "asus rog phone 9 pro", "asus zenfone 12 ultra", "realme 14 pro+", "realme gt 7", "realme gt 8 pro", "nothing phone 3", "nothing phone 3a pro"]
+        };
 
-        function entrar() {
-            let senha = document.getElementById("senha").value;
+        const blacklist = ["s20 fe", "s20 fe 4g", "s20 fe 5g", "p40 pro+", "p50 pro"];
+
+        function resetDashboard() {
+            document.getElementById('dashboard').style.display = "none";
+        }
+
+        // Atualiza a datalist com os nomes comerciais completos salvos
+        function updateDatalistOptions() {
+            const brand = document.getElementById('brandSelect').value;
+            const datalist = document.getElementById('modelsSuggestions');
+            datalist.innerHTML = "";
+            document.getElementById('modelInput').value = "";
+
+            if(brand && esimDatabase[brand]) {
+                esimDatabase[brand].forEach(model => {
+                    let option = document.createElement('option');
+                    // Capitaliza a primeira letra de cada palavra para exibição premium
+                    option.value = model.replace(/\b\w/g, l => l.toUpperCase());
+                    datalist.appendChild(option);
+                });
+            }
+        }
+
+        function setImageFallback(imgElement) {
+            imgElement.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234205eb'><path d='M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm-5 20c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5-4H7V4h10v13z'/></svg>";
+        }
+
+        function checkCompatibility() {
+            const brand = document.getElementById('brandSelect').value;
+            let originalInput = document.getElementById('modelInput').value.trim();
+            let input = originalInput.toLowerCase();
+            const dash = document.getElementById('dashboard');
+
+            if (!input) return alert("Por favor, digite o modelo do dispositivo.");
+
+            if (!brand) {
+                alert("Ação Bloqueada: Por favor, selecione primeiro o Fabricante correto antes de pesquisar o modelo.");
+                return;
+            }
+
+            // Bloqueio de buscas excessivamente curtas ou ambíguas para evitar falsos positivos
+            if (input.length < 3) {
+                alert(`Busca muito curta ("${originalInput}"). Para evitar erros, selecione ou digite o nome completo do aparelho.`);
+                return;
+            }
+
+            let searchQueries = [input];
+            let finalDisplayName = originalInput;
+            const outImg = document.getElementById('outDeviceImage');
+
+            const brandLogos = {
+                "Apple": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apple.svg",
+                "Samsung": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/samsung.svg",
+                "Google": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/google.svg",
+                "Huawei": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/huawei.svg",
+                "Motorola": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/motorola.svg",
+                "Xiaomi": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/xiaomi.svg",
+                "Oppo": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/oppo.svg",
+                "Sony": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/sony.svg",
+                "Vivo": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/vivo.svg",
+                "OnePlus": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/oneplus.svg",
+                "Honor": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/honor.svg",
+                "Sharp": "https://i.postimg.cc/pdyYyTmq/SHARP-AQUOS-Logo-Vector-svg.png",
+                "Rakuten": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/rakuten.svg",
+                "Tablets": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234205eb'><path d='M21 2H3c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 16H5V4h14v14z'/></svg>",
+                "Computadores": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234205eb'><path d='M20 18c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 5h16v11H4V5z'/></svg>",
+                "Outros": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234205eb'><path d='M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm-5 20c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5-4H7V4h10v13z'/></svg>"
+            };
+
+            outImg.src = brandLogos[brand] || brandLogos["Outros"];
+
+            // Força inclusão dos prefixos corretos para a busca casar com a listagem exata
+            if (brand === "Apple" && !input.includes("iphone") && !input.includes("ipad") && !input.includes("watch")) {
+                searchQueries.push("iphone " + input);
+            } else if (brand === "Samsung" && !input.includes("galaxy") && !input.includes("gear")) {
+                searchQueries.push("galaxy " + input);
+            } else if (brand === "Google" && !input.includes("pixel")) {
+                searchQueries.push("pixel " + input);
+            }
+
+            dash.style.display = "block";
             
-            if (senha === senhaCorreta) {
-                // Redireciona a janela atual para o OneDrive, evitando o bloqueio de iframe
-                window.location.href = urlDestino;
+            const outName = document.getElementById('outDeviceName');
+            const outStatus = document.getElementById('outDeviceStatusText');
+            const outBadge = document.getElementById('outStatusBadge');
+            const table = document.getElementById('rulesTableBody');
+            
+            const cardSim = document.getElementById('card物理SIM');
+            const cardMulti = document.getElementById('cardMulti');
+
+            let isBlacklisted = searchQueries.some(q => blacklist.some(b => q.includes(b)));
+            let isKoreanRestricted = (brand === "Samsung" && (input.includes("coreia") || input.includes("korea")));
+            let isPixelRestricted = (brand === "Google" && input.includes("pixel 3") && (input.includes("austrália") || input.includes("taiwan") || input.includes("japão") || input.includes("verizon")));
+
+            if (isBlacklisted || isKoreanRestricted || isPixelRestricted) {
+                outName.innerText = originalInput.toUpperCase();
+                outStatus.innerText = "Este modelo regional/lote NÃO possui suporte a eSIM.";
+                outBadge.className = "badge danger";
+                outBadge.innerText = "Incompatível";
+                cardSim.innerText = "Sim";
+                cardMulti.innerText = "Não";
+                table.innerHTML = `<tr><td>Geral</td><td><span class="badge danger">Bloqueado</span></td><td>Modelo explicitamente restrito pela fabricante ou mercado regional de origem.</td></tr>`;
+                return;
+            }
+
+            let comp = false;
+            let matchedModel = "";
+
+            // Faz a correspondência estrita (o termo buscado precisa abranger o modelo mapeado ou vice-versa)
+            comp = esimDatabase[brand].some(m => {
+                return searchQueries.some(q => q === m || q.includes(m));
+            });
+
+            if (comp) {
+                // Captura o item idêntico da base de dados para garantir exibição correta
+                matchedModel = esimDatabase[brand].find(m => searchQueries.some(q => q === m || q.includes(m)));
+                outName.innerText = matchedModel.toUpperCase();
+                outStatus.innerText = "Dispositivo homologado para rede virtual.";
+                outBadge.className = "badge success";
+                outBadge.innerText = "Compatível";
+                
+                cardSim.innerText = "Sim";
+                cardMulti.innerText = "1 Ativo";
+
+                let isModernIphone = false;
+                if (brand === "Apple" && matchedModel.includes("iphone")) {
+                    const match = matchedModel.match(/\d+/);
+                    if (match && parseInt(match[0]) >= 13) {
+                        isModernIphone = true;
+                    }
+                }
+
+                if (isModernIphone) {
+                    cardMulti.innerText = "2 Ativos (Vários salvos)";
+                }
+
+                let rowsHtml = "";
+                if (brand === "Apple") {
+                    if (matchedModel.includes("14") || matchedModel.includes("15") || matchedModel.includes("16") || matchedModel.includes("17")) {
+                        if (input.includes("eua") || input.includes("usa") || input.includes("porto rico")) {
+                            cardSim.innerText = "Não (Apenas eSIM)";
+                        } else {
+                            cardSim.innerText = "Sim (Se nacional/europeu)";
+                        }
+                    }
+                    if (isModernIphone) {
+                        rowsHtml += `<tr><td>Gerenciamento de Perfis</td><td><span class="badge success">Multi-eSIM Ativo</span></td><td>Dois eSIMs podem ser ativados simultaneamente no iPhone 13 ou superior. Permite transferências nativas.</td></tr>`;
+                    }
+                    rowsHtml += `
+                        <tr><td>Brasil / Europa</td><td><span class="badge success">Liberado</span></td><td>Compatibilidade total (Chip Físico + eSIM).</td></tr>
+                        <tr><td>EUA / Porto Rico</td><td><span class="badge success">Apenas eSIM</span></td><td>Modelos adquiridos nos EUA não possuem gaveta para chip físico.</td></tr>
+                        <tr><td>Turquia / China / HK / Macau</td><td><span class="badge danger">Restrito</span></td><td>Lotes dessas regiões não possuem arquitetura eSIM instalada (Exceto 13 Mini, 12 Mini, SE 2020 e XS).</td></tr>
+                    `;
+                } else if (brand === "Samsung") {
+                    if (matchedModel.includes("fe")) {
+                        rowsHtml += `<tr><td>Alerta de Lote</td><td><span class="badge danger">Variável</span></td><td>Modelos FE podem não suportar eSIM em mercados específicos da Ásia.</td></tr>`;
+                    }
+                    rowsHtml += `
+                        <tr><td>América Latina / Europa</td><td><span class="badge success">Liberado</span></td><td>Homologado normalmente pelas operadoras comerciais.</td></tr>
+                        <tr><td>EUA / Hong Kong / Coreia</td><td><span class="badge danger">Restrito</span></td><td>Aparelhos S20/S21 americanos, Note 20 Ultra/Z Fold 2 (HK/EUA) ou adquiridos na Coreia do Sul NÃO suportam eSIM.</td></tr>
+                    `;
+                } else if (brand === "Google") {
+                    rowsHtml += `
+                        <tr><td>Global Geral</td><td><span class="badge success">Liberado</span></td><td>Nativo do ecossistema Android Clean global.</td></tr>
+                        <tr><td>Exceções Restritas</td><td><span class="badge danger">Bloqueado</span></td><td>Modelos Pixel 3 da Austrália/Taiwan/Japão e Pixel 3a da Verizon (Ásia) não possuem suporte.</td></tr>
+                    `;
+                } else if (brand === "Xiaomi") {
+                    rowsHtml += `
+                        <tr><td>Geral</td><td><span class="badge success">Liberado</span></td><td>Compatibilidade nativa global ativa.</td></tr>
+                    `;
+                } else if (brand === "Vivo" && matchedModel.includes("v29 lite")) {
+                    rowsHtml += `
+                        <tr><td>Restrição Regional</td><td><span class="badge success">Europa Apenas</span></td><td>O modelo Vivo V29 Lite 5G possui suporte ao eSIM exclusivamente em lotes comercializados na Europa.</td></tr>
+                    `;
+                } else {
+                    rowsHtml += `<tr><td>Global</td><td><span class="badge success">Liberado</span></td><td>Dispositivo em conformidade com as diretrizes padrão de rede.</td></tr>`;
+                }
+                table.innerHTML = rowsHtml;
+
             } else {
-                document.getElementById("erro").style.display = "block";
+                outName.innerText = originalInput.toUpperCase();
+                outStatus.innerText = "Dispositivo não localizado ou sem suporte oficial.";
+                outBadge.className = "badge danger";
+                outBadge.innerText = "Não Localizado";
+                cardSim.innerText = "Não Verificado";
+                cardMulti.innerText = "Não";
+                table.innerHTML = `<tr><td>Geral</td><td><span class="badge danger">Inconclusivo</span></td><td>Modelo ausente ou grafia incorreta na matriz ${brand}. Utilize as sugestões da barra ou faça o teste mecânico universal (*#06#).</td></tr>`;
             }
         }
-
-        /* DISPARAR ENTRADA COM A TECLA ENTER */
-        document.getElementById("senha").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                entrar();
-            }
-        });
-
-        /* EFEITO DE DIGITAÇÃO NO TÍTULO DA ABA */
-        const textoCompleto = "E-sim";
-        let indice = 0;
-        let apagando = false;
-
-        function animarTitulo() {
-            if (!apagando) {
-                document.title = textoCompleto.substring(0, indice + 1);
-                indice++;
-                
-                if (indice === textoCompleto.length) {
-                    apagando = true;
-                    setTimeout(animarTitulo, 1500);
-                    return;
-                }
-                setTimeout(animarTitulo, 300);
-            } else {
-                document.title = textoCompleto.substring(0, indice - 1);
-                indice--;
-                
-                if (indice === 1) { 
-                    apagando = false;
-                    setTimeout(animarTitulo, 500);
-                    return;
-                }
-                setTimeout(animarTitulo, 150);
-            }
-        }
-
-        // Inicializa a animação do título
-        animarTitulo();
-
-        /* ALTERNAÇÃO CONTÍNUA DO FAVICON */
-        const icones = [
-            "https://i.postimg.cc/kXhXDbgL/original-viko-(47).png",
-            "https://i.postimg.cc/1zmWTfpF/original-viko-(45).png"
-        ];
-        let atual = 0;
-
-        setInterval(() => {
-            let favicon = document.getElementById("favicon");
-            atual = (atual + 1) % icones.length;
-            favicon.href = icones[atual];
-        }, 700);
     </script>
-
 </body>
 </html>
